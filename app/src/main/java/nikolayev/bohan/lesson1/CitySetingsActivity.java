@@ -11,6 +11,7 @@ import android.widget.TextView;
 public class CitySetingsActivity extends AppCompatActivity {
 
 
+
     Button exit;
     Button city1;
     Button city2;
