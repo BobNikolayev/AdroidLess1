@@ -9,10 +9,15 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements Constants{
+
+    private final static int REQUEST_CODE = 10;
+
     ImageView imageSettings;
     Button citySettingsBtn;
-    TextView textView;
+    TextView cityNameMain;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,9 +25,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         imageSettings = (ImageView) findViewById(R.id.imageSettings);
         citySettingsBtn = (Button) findViewById(R.id.citySettings);
-        textView = (TextView) findViewById(R.id.textView);
+        cityNameMain = findViewById(R.id.textView);
+
+
+
         final Intent SETTINGS = new Intent(this, SettingsActivity.class);
-        final Intent citySettings = new Intent(this,CitySetingsActivity.class);
+
 
 
         View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -33,7 +41,11 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(SETTINGS);
                     break;
                 case R.id.citySettings:
-                    startActivity(citySettings);
+                    Parcel parcel = new Parcel();
+                    parcel.cityName = cityNameMain.getText().toString();
+                    Intent citySettings = new Intent(MainActivity.this,CitySetingsActivity.class);
+                    citySettings.putExtra(CITY_KEY,parcel);
+                    startActivityForResult(citySettings,REQUEST_CODE);
                     break;
             }
             }
@@ -48,4 +60,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    protected void onActivityResult(int requestCode,int resultCode,Intent data){
+        if(requestCode != REQUEST_CODE){
+            super.onActivityResult( requestCode, resultCode, data);
+            return;
+        }
+
+        if(resultCode == RESULT_OK){
+           TextView mainCityName = findViewById(R.id.textView);
+            mainCityName.setText(data.getStringExtra(CITY_RESULT));
+        }
+    }
 }
